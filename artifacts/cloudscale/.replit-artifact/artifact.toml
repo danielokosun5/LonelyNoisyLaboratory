@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "CloudScale"
+description = "A polished responsive cloud engineering dashboard and landing page that demonstrates an auto-scaling web application architecture with an Application Load Balancer, EC2 instances, an Auto Scaling Group, CloudWatch monitoring, and Docker. Includes an interactive frontend-only traffic simulation that visibly scales infrastructure metrics."
+version = "1.0.0"
+id = "artifacts/cloudscale"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18859
+
+[services.development]
+run = "pnpm --filter @workspace/cloudscale run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/cloudscale", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/cloudscale/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18859"
+BASE_PATH = "/"
