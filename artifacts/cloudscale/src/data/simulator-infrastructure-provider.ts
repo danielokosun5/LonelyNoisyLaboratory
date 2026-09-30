@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import type { InfrastructureProvider } from './infrastructure-provider';
+import type { InfrastructureProvider, InfrastructureView } from './infrastructure-provider';
 import type { InfrastructureData, InfrastructureEvent, InfrastructureStatus, TelemetryPoint } from './infrastructure';
 import { useSimulation } from '@/hooks/use-simulation';
 
 type PreviousSample = { requestsPerMin: number; cpuPercent: number; activeInstances: number; status: InfrastructureStatus; target: number };
 
-function useSimulatorInfrastructureData(): InfrastructureData {
+function useSimulatorInfrastructureData(): InfrastructureView {
   const { state, targetReqs, simulateTraffic, reset } = useSimulation();
   const [chartPoints, setChartPoints] = useState<TelemetryPoint[]>([]);
   const [events, setEvents] = useState<InfrastructureEvent[]>(() => [{
@@ -53,7 +53,7 @@ function useSimulatorInfrastructureData(): InfrastructureData {
     cpuPercent: state.cpuPercent,
   }));
 
-  return {
+  const data: InfrastructureData = {
     application: { id: 'cloudscale-demo', name: 'CloudScale demo application', environment: 'Demo Mode', status },
     status,
     instances,
@@ -62,9 +62,8 @@ function useSimulatorInfrastructureData(): InfrastructureData {
     metrics: { requestsPerMinute: state.requestsPerMin, targetRequestsPerMinute: targetReqs, cpuPercent: state.cpuPercent, responseTimeMs: state.responseTimeMs, errorRatePercent, availabilityPercent: 100 - errorRatePercent },
     chartPoints,
     events,
-    simulateTraffic,
-    reset,
   };
+  return { ...data, simulateTraffic, reset, dataSource: 'simulator-fallback', apiError: null };
 }
 
 export const simulatorInfrastructureProvider: InfrastructureProvider = {

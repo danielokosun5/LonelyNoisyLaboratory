@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { Link, useLocation } from 'wouter';
 import { Badge } from '@/components/ui/badge';
-import type { InfrastructureData } from '@/data/infrastructure';
+import type { InfrastructureView } from '@/data/infrastructure-provider';
 import { cn } from '@/lib/utils';
 
 const primaryNavigation = [
@@ -44,7 +44,7 @@ const pageTitles: Record<string, string> = {
 };
 
 type DashboardLayoutProps = {
-  telemetry: InfrastructureData;
+  telemetry: InfrastructureView;
   children: ReactNode;
 };
 
@@ -128,7 +128,7 @@ export function DashboardLayout({ telemetry, children }: DashboardLayoutProps) {
               </span>
               <div className="min-w-0">
                 <p className="text-[11px] font-medium text-foreground">Demo environment</p>
-                <p className="mt-0.5 truncate text-[10px] text-muted-foreground">Local simulation active</p>
+                <p className="mt-0.5 truncate text-[10px] text-muted-foreground">{telemetry.dataSource === 'api' ? 'API demo simulator active' : 'Local simulator fallback'}</p>
               </div>
             </div>
           </div>

@@ -3,9 +3,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { PageHeading, TrafficReadout } from '@/components/dashboard-widgets';
-import type { InfrastructureData } from '@/data/infrastructure';
+import type { InfrastructureView } from '@/data/infrastructure-provider';
 
-export function ApplicationsPage({ telemetry }: { telemetry: InfrastructureData }) {
+export function ApplicationsPage({ telemetry }: { telemetry: InfrastructureView }) {
   return (
     <>
       <PageHeading eyebrow="Workspace" title="Applications" description="Manage the demo application and exercise its simulated infrastructure." />
@@ -18,7 +18,7 @@ export function ApplicationsPage({ telemetry }: { telemetry: InfrastructureData 
                 <h2 className="text-sm font-semibold">CloudScale demo application</h2>
                 <Badge variant="healthy" className="px-1.5 py-0.5 text-[9px] uppercase tracking-wide">Active</Badge>
               </div>
-              <p className="mt-1 text-xs leading-5 text-muted-foreground">The existing browser simulation drives the application traffic and cluster metrics shown throughout this dashboard.</p>
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">The CloudScale API simulator drives the application traffic and cluster metrics shown throughout this dashboard.</p>
             </div>
           </div>
           <CardContent className="px-5 pb-5 pt-4 sm:px-6">

@@ -27,6 +27,8 @@ if (!basePath) {
   );
 }
 
+const apiTarget = process.env.API_PROXY_TARGET ?? 'http://127.0.0.1:3000';
+
 export default defineConfig({
   base: basePath,
   plugins: [
@@ -72,10 +74,16 @@ export default defineConfig({
     fs: {
       strict: true,
     },
+    proxy: {
+      '/api': { target: apiTarget, changeOrigin: true },
+    },
   },
   preview: {
     port,
     host: '0.0.0.0',
     allowedHosts: true,
+    proxy: {
+      '/api': { target: apiTarget, changeOrigin: true },
+    },
   },
 });
