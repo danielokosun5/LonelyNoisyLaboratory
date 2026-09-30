@@ -2,18 +2,18 @@ import { Cpu, Server, TrendingDown, TrendingUp } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { MetricCard, PageHeading } from '@/components/dashboard-widgets';
 import { ScalingSteps } from '@/components/scaling-steps';
-import type { DashboardTelemetry } from '@/hooks/use-dashboard-telemetry';
+import type { InfrastructureData } from '@/data/infrastructure';
 
-export function AutoScalingPage({ telemetry }: { telemetry: DashboardTelemetry }) {
-  const scalingUp = telemetry.state.status === 'scaling' && telemetry.state.cpuPercent >= 25;
+export function AutoScalingPage({ telemetry }: { telemetry: InfrastructureData }) {
+  const scalingUp = telemetry.status === 'scaling' && telemetry.metrics.cpuPercent >= telemetry.autoScalingGroup.thresholds.scaleInCpuPercent;
 
   return (
     <>
       <PageHeading eyebrow="Capacity management" title="Auto Scaling" description="Follow the simulated scaling thresholds and current instance capacity." />
       <section className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-3 xl:gap-4">
-        <MetricCard title="Active instances" value={telemetry.state.activeInstances.toString()} suffix="nodes" detail="Current group capacity" icon={Server} tone="primary" />
-        <MetricCard title="Average CPU" value={`${telemetry.state.cpuPercent}%`} detail="Scale-out above 75%" icon={Cpu} tone={telemetry.state.cpuPercent >= 75 ? 'warning' : 'blue'} />
-        <MetricCard title="Target traffic" value={telemetry.targetRequestsPerMin.toLocaleString()} suffix="req/min" detail="Current simulator target" icon={scalingUp ? TrendingUp : TrendingDown} tone="blue" />
+        <MetricCard title="Active instances" value={telemetry.autoScalingGroup.currentCapacity.toString()} suffix="nodes" detail="Current group capacity" icon={Server} tone="primary" />
+        <MetricCard title="Average CPU" value={`${telemetry.metrics.cpuPercent}%`} detail={`Scale-out above ${telemetry.autoScalingGroup.thresholds.scaleOutCpuPercent}%`} icon={Cpu} tone={telemetry.metrics.cpuPercent >= telemetry.autoScalingGroup.thresholds.scaleOutCpuPercent ? 'warning' : 'blue'} />
+        <MetricCard title="Target traffic" value={telemetry.metrics.targetRequestsPerMinute.toLocaleString()} suffix="req/min" detail="Current infrastructure data target" icon={scalingUp ? TrendingUp : TrendingDown} tone="blue" />
       </section>
 
       <Card className="mb-4">

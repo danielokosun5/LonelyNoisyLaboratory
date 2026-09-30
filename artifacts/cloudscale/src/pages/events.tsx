@@ -1,9 +1,9 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { PageHeading } from '@/components/dashboard-widgets';
 import { LiveEvents } from '@/components/live-events';
-import type { DashboardTelemetry } from '@/hooks/use-dashboard-telemetry';
+import type { InfrastructureData } from '@/data/infrastructure';
 
-export function EventsPage({ telemetry }: { telemetry: DashboardTelemetry }) {
+export function EventsPage({ telemetry }: { telemetry: InfrastructureData }) {
   return (
     <>
       <PageHeading eyebrow="Activity" title="Events" description="Simulation signals, health changes, and scaling activity in time order." />

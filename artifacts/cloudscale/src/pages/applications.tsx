@@ -3,9 +3,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { PageHeading, TrafficReadout } from '@/components/dashboard-widgets';
-import type { DashboardTelemetry } from '@/hooks/use-dashboard-telemetry';
+import type { InfrastructureData } from '@/data/infrastructure';
 
-export function ApplicationsPage({ telemetry }: { telemetry: DashboardTelemetry }) {
+export function ApplicationsPage({ telemetry }: { telemetry: InfrastructureData }) {
   return (
     <>
       <PageHeading eyebrow="Workspace" title="Applications" description="Manage the demo application and exercise its simulated infrastructure." />
@@ -23,8 +23,8 @@ export function ApplicationsPage({ telemetry }: { telemetry: DashboardTelemetry 
           </div>
           <CardContent className="px-5 pb-5 pt-4 sm:px-6">
             <div className="grid grid-cols-2 gap-2.5">
-              <TrafficReadout label="Current traffic" value={telemetry.state.requestsPerMin.toLocaleString()} unit="req/min" />
-              <TrafficReadout label="Target traffic" value={telemetry.targetRequestsPerMin.toLocaleString()} unit="req/min" emphasis />
+              <TrafficReadout label="Current traffic" value={telemetry.metrics.requestsPerMinute.toLocaleString()} unit="req/min" />
+              <TrafficReadout label="Target traffic" value={telemetry.metrics.targetRequestsPerMinute.toLocaleString()} unit="req/min" emphasis />
             </div>
           </CardContent>
         </Card>

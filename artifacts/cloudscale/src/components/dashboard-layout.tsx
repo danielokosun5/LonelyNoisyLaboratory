@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { Link, useLocation } from 'wouter';
 import { Badge } from '@/components/ui/badge';
-import type { DashboardTelemetry } from '@/hooks/use-dashboard-telemetry';
+import type { InfrastructureData } from '@/data/infrastructure';
 import { cn } from '@/lib/utils';
 
 const primaryNavigation = [
@@ -44,15 +44,15 @@ const pageTitles: Record<string, string> = {
 };
 
 type DashboardLayoutProps = {
-  telemetry: DashboardTelemetry;
+  telemetry: InfrastructureData;
   children: ReactNode;
 };
 
 export function DashboardLayout({ telemetry, children }: DashboardLayoutProps) {
   const [location] = useLocation();
-  const statusLabel = telemetry.state.status === 'healthy'
+  const statusLabel = telemetry.status === 'healthy'
     ? 'Operational'
-    : telemetry.state.status === 'scaling'
+    : telemetry.status === 'scaling'
       ? 'Scaling'
       : 'Degraded';
   const currentPage = pageTitles[location] ?? 'Overview';
@@ -152,7 +152,7 @@ export function DashboardLayout({ telemetry, children }: DashboardLayoutProps) {
                 <span className="text-foreground">Demo Mode</span>
               </div>
               <div className="hidden h-7 w-px bg-border sm:block" />
-              <Badge variant={telemetry.state.status === 'healthy' ? 'healthy' : telemetry.state.status === 'scaling' ? 'warning' : 'destructive'} className="gap-1.5 px-2.5 py-1.5 text-[11px]">
+              <Badge variant={telemetry.status === 'healthy' ? 'healthy' : telemetry.status === 'scaling' ? 'warning' : 'destructive'} className="gap-1.5 px-2.5 py-1.5 text-[11px]">
                 <span className="h-1.5 w-1.5 rounded-full bg-current" />
                 <span className="hidden sm:inline">{statusLabel}</span>
               </Badge>

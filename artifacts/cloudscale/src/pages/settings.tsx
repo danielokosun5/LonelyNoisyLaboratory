@@ -2,13 +2,13 @@ import { Activity, Cloud, Server } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { PageHeading } from '@/components/dashboard-widgets';
-import type { DashboardTelemetry } from '@/hooks/use-dashboard-telemetry';
+import type { InfrastructureData } from '@/data/infrastructure';
 
-export function SettingsPage({ telemetry }: { telemetry: DashboardTelemetry }) {
+export function SettingsPage({ telemetry }: { telemetry: InfrastructureData }) {
   const settings = [
-    { icon: Cloud, label: 'Environment', value: 'Demo Mode' },
+    { icon: Cloud, label: 'Environment', value: telemetry.application.environment },
     { icon: Activity, label: 'Telemetry source', value: 'Frontend simulation' },
-    { icon: Server, label: 'Active instances', value: `${telemetry.state.activeInstances} instances` },
+    { icon: Server, label: 'Active instances', value: `${telemetry.autoScalingGroup.currentCapacity} instances` },
     { icon: Cloud, label: 'Cloud connection', value: 'Not connected' },
   ];
 

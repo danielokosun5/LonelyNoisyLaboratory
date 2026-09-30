@@ -7,9 +7,9 @@ import {
   Server,
   Zap,
 } from 'lucide-react';
-import type { DashboardEvent, DashboardEventKind } from '@/hooks/use-dashboard-telemetry';
+import type { InfrastructureEvent, InfrastructureEventKind } from '@/data/infrastructure';
 
-const eventStyles: Record<DashboardEventKind, { icon: typeof Activity; className: string }> = {
+const eventStyles: Record<InfrastructureEventKind, { icon: typeof Activity; className: string }> = {
   healthy: { icon: CircleCheck, className: 'text-success bg-success/10' },
   traffic: { icon: Zap, className: 'text-primary bg-primary/10' },
   threshold: { icon: CircleAlert, className: 'text-warning bg-warning/10' },
@@ -26,7 +26,7 @@ function relativeTime(timestamp: number, now: number) {
   return `${minutes}m ago`;
 }
 
-export function LiveEvents({ events, limit = 6 }: { events: DashboardEvent[]; limit?: number }) {
+export function LiveEvents({ events, limit = 6 }: { events: InfrastructureEvent[]; limit?: number }) {
   const now = Date.now();
 
   return (

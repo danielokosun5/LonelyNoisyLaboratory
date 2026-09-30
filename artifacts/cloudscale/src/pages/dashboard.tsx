@@ -2,10 +2,10 @@ import { Activity, ArrowRight, Bell, Cpu, Network, Server } from 'lucide-react';
 import { Link } from 'wouter';
 import { Card, CardContent } from '@/components/ui/card';
 import { MetricCard, PageHeading } from '@/components/dashboard-widgets';
-import type { DashboardTelemetry } from '@/hooks/use-dashboard-telemetry';
+import type { InfrastructureData } from '@/data/infrastructure';
 
-export function OverviewPage({ telemetry }: { telemetry: DashboardTelemetry }) {
-  const { state } = telemetry;
+export function OverviewPage({ telemetry }: { telemetry: InfrastructureData }) {
+  const { metrics } = telemetry;
 
   return (
     <>
@@ -17,23 +17,23 @@ export function OverviewPage({ telemetry }: { telemetry: DashboardTelemetry }) {
       <PageHeading eyebrow="CloudScale" title="Cloud infrastructure" description="A live snapshot of your application environment and scaling activity." />
 
       <section aria-label="Environment metrics" className="mb-5 grid grid-cols-2 gap-3 md:grid-cols-3 xl:gap-4 2xl:grid-cols-6">
-        <MetricCard title="Active instances" value={state.activeInstances.toString()} suffix="nodes" detail="In auto scaling group" icon={Server} tone="primary" />
-        <MetricCard title="Requests / min" value={state.requestsPerMin.toLocaleString()} suffix="req/min" detail="Current application load" icon={Activity} tone="blue" />
-        <MetricCard title="Average CPU" value={`${state.cpuPercent}%`} detail="Scale-out threshold 75%" icon={Cpu} tone={state.cpuPercent >= 75 ? 'warning' : 'primary'} />
-        <MetricCard title="Response time" value={`${state.responseTimeMs}`} suffix="ms" detail="Estimated service latency" icon={Activity} tone={state.responseTimeMs > 200 ? 'warning' : 'blue'} />
-        <MetricCard title="Error rate" value={`${telemetry.errorRatePercent.toFixed(2)}%`} detail="Estimated from cluster health" icon={Bell} tone={telemetry.errorRatePercent > 1 ? 'danger' : 'success'} />
-        <MetricCard title="Availability" value={`${telemetry.availabilityPercent.toFixed(2)}%`} detail="Simulated service health" icon={Network} tone={telemetry.availabilityPercent < 99 ? 'warning' : 'success'} />
+        <MetricCard title="Active instances" value={telemetry.autoScalingGroup.currentCapacity.toString()} suffix="nodes" detail="In auto scaling group" icon={Server} tone="primary" />
+        <MetricCard title="Requests / min" value={metrics.requestsPerMinute.toLocaleString()} suffix="req/min" detail="Current application load" icon={Activity} tone="blue" />
+        <MetricCard title="Average CPU" value={`${metrics.cpuPercent}%`} detail="Scale-out threshold 75%" icon={Cpu} tone={metrics.cpuPercent >= 75 ? 'warning' : 'primary'} />
+        <MetricCard title="Response time" value={`${metrics.responseTimeMs}`} suffix="ms" detail="Estimated service latency" icon={Activity} tone={metrics.responseTimeMs > 200 ? 'warning' : 'blue'} />
+        <MetricCard title="Error rate" value={`${metrics.errorRatePercent.toFixed(2)}%`} detail="Estimated from cluster health" icon={Bell} tone={metrics.errorRatePercent > 1 ? 'danger' : 'success'} />
+        <MetricCard title="Availability" value={`${metrics.availabilityPercent.toFixed(2)}%`} detail="Simulated service health" icon={Network} tone={metrics.availabilityPercent < 99 ? 'warning' : 'success'} />
       </section>
 
       <Card>
         <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <span className={`flex h-10 w-10 items-center justify-center rounded-lg ${state.status === 'degraded' ? 'bg-destructive/10 text-destructive' : state.status === 'scaling' ? 'bg-warning/10 text-warning' : 'bg-success/10 text-success'}`}>
+            <span className={`flex h-10 w-10 items-center justify-center rounded-lg ${telemetry.status === 'degraded' ? 'bg-destructive/10 text-destructive' : telemetry.status === 'scaling' ? 'bg-warning/10 text-warning' : 'bg-success/10 text-success'}`}>
               <Activity className="h-5 w-5" />
             </span>
             <div>
-              <p className="text-sm font-semibold">{state.status === 'healthy' ? 'System operational' : state.status === 'scaling' ? 'Capacity is scaling' : 'Performance is degraded'}</p>
-              <p className="mt-1 text-xs text-muted-foreground">Demo Mode <span className="px-1 text-border">·</span> {state.activeInstances} active instances <span className="px-1 text-border">·</span> {state.cpuPercent}% average CPU</p>
+              <p className="text-sm font-semibold">{telemetry.status === 'healthy' ? 'System operational' : telemetry.status === 'scaling' ? 'Capacity is scaling' : 'Performance is degraded'}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{telemetry.application.environment} <span className="px-1 text-border">·</span> {telemetry.autoScalingGroup.currentCapacity} active instances <span className="px-1 text-border">·</span> {metrics.cpuPercent}% average CPU</p>
             </div>
           </div>
           <span className="rounded-md border border-border bg-background/50 px-2.5 py-1.5 font-mono text-[10px] text-muted-foreground">Simulation active</span>

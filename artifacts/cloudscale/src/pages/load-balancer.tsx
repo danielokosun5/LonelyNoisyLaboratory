@@ -1,16 +1,16 @@
 import { Activity, ArrowDown, Globe2, Layers3, ShieldCheck } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { MetricCard, PageHeading } from '@/components/dashboard-widgets';
-import type { DashboardTelemetry } from '@/hooks/use-dashboard-telemetry';
+import type { InfrastructureData } from '@/data/infrastructure';
 
-export function LoadBalancerPage({ telemetry }: { telemetry: DashboardTelemetry }) {
+export function LoadBalancerPage({ telemetry }: { telemetry: InfrastructureData }) {
   return (
     <>
       <PageHeading eyebrow="Traffic routing" title="Load Balancer" description="Explore the simulated entry point that distributes application traffic across active instances." />
       <section className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-3 xl:gap-4">
-        <MetricCard title="Incoming traffic" value={telemetry.state.requestsPerMin.toLocaleString()} suffix="req/min" detail="Current simulated request rate" icon={Activity} tone="blue" />
-        <MetricCard title="Active targets" value={telemetry.state.activeInstances.toString()} suffix="instances" detail="Matches active demo capacity" icon={Layers3} tone="primary" />
-        <MetricCard title="Routing status" value={telemetry.state.status === 'degraded' ? 'Watch' : 'Active'} detail="Demo routing state" icon={ShieldCheck} tone={telemetry.state.status === 'degraded' ? 'warning' : 'success'} />
+        <MetricCard title="Incoming traffic" value={telemetry.loadBalancer.requestsPerMinute.toLocaleString()} suffix="req/min" detail="Current infrastructure request rate" icon={Activity} tone="blue" />
+        <MetricCard title="Active targets" value={telemetry.loadBalancer.healthyTargetCount.toString()} suffix="instances" detail="Healthy load balancer targets" icon={Layers3} tone="primary" />
+        <MetricCard title="Routing status" value={telemetry.loadBalancer.status === 'degraded' ? 'Watch' : 'Active'} detail="Load balancer status" icon={ShieldCheck} tone={telemetry.loadBalancer.status === 'degraded' ? 'warning' : 'success'} />
       </section>
 
       <Card>
@@ -22,11 +22,11 @@ export function LoadBalancerPage({ telemetry }: { telemetry: DashboardTelemetry 
           </div>
         </div>
         <CardContent className="grid gap-3 border-t border-border px-5 py-5 sm:grid-cols-[1fr_auto_1fr_auto_1fr] sm:items-center sm:px-6">
-          <FlowNode icon={Globe2} title="Internet" detail={`${telemetry.state.requestsPerMin.toLocaleString()} requests/min`} />
+          <FlowNode icon={Globe2} title="Internet" detail={`${telemetry.metrics.requestsPerMinute.toLocaleString()} requests/min`} />
           <ArrowDown className="mx-auto h-4 w-4 text-muted-foreground sm:rotate-[-90deg]" />
           <FlowNode icon={ShieldCheck} title="Load balancer" detail="Distributes incoming requests" highlighted />
           <ArrowDown className="mx-auto h-4 w-4 text-muted-foreground sm:rotate-[-90deg]" />
-          <FlowNode icon={Layers3} title="Healthy targets" detail={`${telemetry.state.activeInstances} active instances`} />
+          <FlowNode icon={Layers3} title="Healthy targets" detail={`${telemetry.loadBalancer.healthyTargetCount} active instances`} />
         </CardContent>
       </Card>
       <p className="mt-3 text-[11px] text-muted-foreground">Target health and request distribution are illustrative only; this page does not connect to AWS.</p>

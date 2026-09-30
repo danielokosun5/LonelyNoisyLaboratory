@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
+import type { InfrastructureStatus } from '@/data/infrastructure';
 
-export type SystemStatus = 'healthy' | 'scaling' | 'degraded';
+export type SystemStatus = InfrastructureStatus;
 
 export type SimulationState = {
   requestsPerMin: number;
@@ -104,5 +105,5 @@ export function useSimulation() {
     return () => clearInterval(interval);
   }, [targetReqs]);
 
-  return { state, simulateTraffic, reset };
+  return { state, targetReqs, simulateTraffic, reset };
 }

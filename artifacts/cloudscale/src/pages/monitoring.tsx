@@ -2,21 +2,21 @@ import { Activity, Cpu, Gauge, Server, ShieldCheck, Timer } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { MetricCard, PageHeading } from '@/components/dashboard-widgets';
 import { TrafficChart } from '@/components/traffic-chart';
-import type { DashboardTelemetry } from '@/hooks/use-dashboard-telemetry';
+import type { InfrastructureData } from '@/data/infrastructure';
 
-export function MonitoringPage({ telemetry }: { telemetry: DashboardTelemetry }) {
-  const { state } = telemetry;
+export function MonitoringPage({ telemetry }: { telemetry: InfrastructureData }) {
+  const { metrics } = telemetry;
 
   return (
     <>
       <PageHeading eyebrow="Observability" title="Monitoring" description="Live demo telemetry for request volume, compute utilization, and service health." />
       <section aria-label="Monitoring metrics" className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-3 xl:gap-4 2xl:grid-cols-6">
-        <MetricCard title="Active instances" value={state.activeInstances.toString()} suffix="nodes" detail="Current group capacity" icon={Server} tone="primary" />
-        <MetricCard title="Requests / min" value={state.requestsPerMin.toLocaleString()} suffix="req/min" detail="Current application load" icon={Activity} tone="blue" />
-        <MetricCard title="Average CPU" value={`${state.cpuPercent}%`} detail="Scale-out threshold 75%" icon={Cpu} tone={state.cpuPercent >= 75 ? 'warning' : 'primary'} />
-        <MetricCard title="Response time" value={`${state.responseTimeMs}`} suffix="ms" detail="Estimated service latency" icon={Timer} tone={state.responseTimeMs > 200 ? 'warning' : 'blue'} />
-        <MetricCard title="Error rate" value={`${telemetry.errorRatePercent.toFixed(2)}%`} detail="Estimated from cluster health" icon={Gauge} tone={telemetry.errorRatePercent > 1 ? 'danger' : 'success'} />
-        <MetricCard title="Availability" value={`${telemetry.availabilityPercent.toFixed(2)}%`} detail="Simulated service health" icon={ShieldCheck} tone={telemetry.availabilityPercent < 99 ? 'warning' : 'success'} />
+        <MetricCard title="Active instances" value={telemetry.autoScalingGroup.currentCapacity.toString()} suffix="nodes" detail="Current group capacity" icon={Server} tone="primary" />
+        <MetricCard title="Requests / min" value={metrics.requestsPerMinute.toLocaleString()} suffix="req/min" detail="Current application load" icon={Activity} tone="blue" />
+        <MetricCard title="Average CPU" value={`${metrics.cpuPercent}%`} detail="Scale-out threshold 75%" icon={Cpu} tone={metrics.cpuPercent >= 75 ? 'warning' : 'primary'} />
+        <MetricCard title="Response time" value={`${metrics.responseTimeMs}`} suffix="ms" detail="Estimated service latency" icon={Timer} tone={metrics.responseTimeMs > 200 ? 'warning' : 'blue'} />
+        <MetricCard title="Error rate" value={`${metrics.errorRatePercent.toFixed(2)}%`} detail="Estimated from cluster health" icon={Gauge} tone={metrics.errorRatePercent > 1 ? 'danger' : 'success'} />
+        <MetricCard title="Availability" value={`${metrics.availabilityPercent.toFixed(2)}%`} detail="Simulated service health" icon={ShieldCheck} tone={metrics.availabilityPercent < 99 ? 'warning' : 'success'} />
       </section>
 
       <Card className="min-w-0">
