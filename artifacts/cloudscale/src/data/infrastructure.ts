@@ -9,5 +9,6 @@ export type {
   InstanceStatus,
   LoadBalancer,
   TelemetryPoint,
+  TelemetryData,
   TrafficMetrics,
 } from '@workspace/api-zod';

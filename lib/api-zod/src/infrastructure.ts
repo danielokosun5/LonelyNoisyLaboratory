@@ -51,6 +51,11 @@ export const TelemetryPointSchema = z.object({
   cpuPercent: z.number(),
 });
 
+export const TelemetryDataSchema = z.object({
+  metrics: TrafficMetricsSchema,
+  chartPoints: z.array(TelemetryPointSchema),
+});
+
 export const ApplicationEnvironmentSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -70,6 +75,8 @@ export const InfrastructureDataSchema = z.object({
   events: z.array(InfrastructureEventSchema),
 });
 
+export const InfrastructureEventsSchema = z.array(InfrastructureEventSchema);
+
 export type InfrastructureStatus = z.infer<typeof InfrastructureStatusSchema>;
 export type InstanceStatus = z.infer<typeof InstanceStatusSchema>;
 export type ComputeInstance = z.infer<typeof ComputeInstanceSchema>;
@@ -79,5 +86,6 @@ export type TrafficMetrics = z.infer<typeof TrafficMetricsSchema>;
 export type InfrastructureEventKind = z.infer<typeof InfrastructureEventKindSchema>;
 export type InfrastructureEvent = z.infer<typeof InfrastructureEventSchema>;
 export type TelemetryPoint = z.infer<typeof TelemetryPointSchema>;
+export type TelemetryData = z.infer<typeof TelemetryDataSchema>;
 export type ApplicationEnvironment = z.infer<typeof ApplicationEnvironmentSchema>;
 export type InfrastructureData = z.infer<typeof InfrastructureDataSchema>;

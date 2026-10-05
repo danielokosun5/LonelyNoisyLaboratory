@@ -18,7 +18,11 @@ export function ApplicationsPage({ telemetry }: { telemetry: InfrastructureView 
                 <h2 className="text-sm font-semibold">CloudScale demo application</h2>
                 <Badge variant="healthy" className="px-1.5 py-0.5 text-[9px] uppercase tracking-wide">Active</Badge>
               </div>
-              <p className="mt-1 text-xs leading-5 text-muted-foreground">The CloudScale API simulator drives the application traffic and cluster metrics shown throughout this dashboard.</p>
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                {telemetry.dataSource === 'api'
+                  ? 'The CloudScale API demo provider supplies application traffic and cluster metrics throughout this dashboard.'
+                  : 'The in-browser demo simulator supplies application traffic and cluster metrics throughout this dashboard.'}
+              </p>
             </div>
           </div>
           <CardContent className="px-5 pb-5 pt-4 sm:px-6">

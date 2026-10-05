@@ -41,7 +41,7 @@ export class SimulatorInfrastructureProvider implements InfrastructureProvider {
     timer.unref();
   }
 
-  getInfrastructureData(): InfrastructureData {
+  async getInfrastructureData(): Promise<InfrastructureData> {
     const errorRatePercent = this.state.status === 'degraded'
       ? Math.max(1.2, (this.state.cpuPercent - 80) * 0.16)
       : this.state.cpuPercent > 75 ? 0.24 : 0.04;
@@ -84,11 +84,11 @@ export class SimulatorInfrastructureProvider implements InfrastructureProvider {
     };
   }
 
-  simulateTraffic(): void {
+  async simulateTraffic(): Promise<void> {
     this.targetRequestsPerMin = Math.min(this.targetRequestsPerMin + 1200, 8000);
   }
 
-  returnToBaseline(): void {
+  async returnToBaseline(): Promise<void> {
     this.targetRequestsPerMin = BASE_REQUESTS;
   }
 

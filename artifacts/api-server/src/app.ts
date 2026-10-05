@@ -35,7 +35,12 @@ app.use("/api", (_req, res) => {
 });
 app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   logger.error({ err }, "Unhandled API error");
-  res.status(500).json({ error: "Internal server error" });
+  const status = err instanceof SyntaxError && "status" in err && err.status === 400
+    ? 400
+    : 500;
+  res.status(status).json({
+    error: status === 400 ? "Invalid JSON request body" : "Internal server error",
+  });
 });
 
 export default app;
