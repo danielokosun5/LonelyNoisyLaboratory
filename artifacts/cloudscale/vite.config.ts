@@ -19,13 +19,36 @@ if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
 
-const basePath = process.env.BASE_PATH;
+const configuredBasePath = process.env.BASE_PATH;
 
-if (!basePath) {
+if (!configuredBasePath) {
   throw new Error(
     'BASE_PATH environment variable is required but was not provided.',
   );
 }
+
+// MSYS2 (Git Bash) converts POSIX-looking environment values before starting
+// native Windows programs. A URL base such as "/" can arrive as the Git
+// installation directory, so map values under that root back to URL paths.
+const msysPrefix = process.env.MSYSTEM_PREFIX;
+const msysRoot = msysPrefix ? path.resolve(msysPrefix, '..') : null;
+const pathUnderMsysRoot = msysRoot
+  ? path.relative(msysRoot, path.resolve(configuredBasePath))
+  : null;
+const isMsysConvertedPath =
+  process.platform === 'win32' &&
+  Boolean(process.env.MSYSTEM) &&
+  pathUnderMsysRoot !== null &&
+  (pathUnderMsysRoot === '' ||
+    (pathUnderMsysRoot !== '..' &&
+      !pathUnderMsysRoot.startsWith(`..${path.sep}`) &&
+      !path.isAbsolute(pathUnderMsysRoot)));
+const hasTrailingSlash = /[\\/]$/.test(configuredBasePath);
+const basePath = isMsysConvertedPath
+  ? pathUnderMsysRoot === ''
+    ? '/'
+    : `/${pathUnderMsysRoot.split(path.sep).join('/')}${hasTrailingSlash ? '/' : ''}`
+  : configuredBasePath;
 
 const apiTarget = process.env.API_PROXY_TARGET ?? 'http://127.0.0.1:3000';
 
